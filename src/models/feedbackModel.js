@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db/config');
 const Product = require('./productModel');
 
-const Feedback = sequelize.define('Feedback', {
+const Feedback = sequelize.define('feedbacks', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
