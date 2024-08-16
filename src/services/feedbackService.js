@@ -1,0 +1,32 @@
+const Feedback = require('../models/feedbackModel');
+const Product = require('../models/productModel');
+
+const createFeedback = async (data) => {
+    return await Feedback.create(data);
+}
+
+const getFeedbacks = async () => {
+    return await Feedback.findAll({
+        include: Product,
+    });
+}
+
+const getFeedbackById = async (id) => {
+    return await Feedback.findByPk(id);
+};
+
+const updateFeedback = async (id, data) => {
+    await Feedback.update(data, { where: { id } });
+    return getFeedbackById(id);
+};
+
+const deleteFeedback = async (id) => {
+    return await Feedback.destroy({ where: { id } });
+};
+module.exports = {
+    createFeedback,
+    getFeedbacks,
+    getFeedbackById,
+    updateFeedback,
+    deleteFeedback,
+};
