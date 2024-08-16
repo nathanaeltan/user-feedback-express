@@ -17,7 +17,20 @@ const createFeedback = async (req, res) => {
 const getAllFeedback = async (req, res) => {
     try {
         const feedbacks = await feedbackService.getAllFeedback();
-        res.status(200).json(feedbacks);
+        return res.status(200).json(feedbacks);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+const getFeedbackById = async (req, res) => {
+    try {
+        const feedback = await feedbackService.getFeedbackById(req.params.id);
+        if (feedback) {
+            return res.status(200).json(feedback);
+        } else {
+            return res.status(404).json({ message: 'Feedback not found' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -27,4 +40,5 @@ const getAllFeedback = async (req, res) => {
 module.exports = {
     createFeedback,
     getAllFeedback,
+    getFeedbackById,
 }

@@ -3,6 +3,7 @@ const app = require("../app");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Feedback = require("../models/feedbackModel");
+const feedbackService = require("../services/feedbackService");
 
 describe("POST /feedback", () => {
   let testUser, testProduct;
@@ -153,4 +154,51 @@ describe("GET /api/feedback", () => {
     expect(response.status).toBe(500);
     expect(response.body).toHaveProperty("message", "Server error");
   });
+});
+
+describe('GET /api/feedback/:id', () => {
+    const feedback = {
+        id: 1,
+        feedback: 'Great product!',
+        product_id: 1,
+        user_id: 1,
+        created_at: new Date(),
+    };
+
+    beforeEach(() => {
+        jest.spyOn(Feedback, "findByPk").mockResolvedValue(feedback);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should return feedback by ID successfully', async () => {
+
+        const response = await request(app).get('/api/feedback/1');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('id', 1);
+        expect(response.body).toHaveProperty('feedback', 'Great product!');
+        expect(response.body).toHaveProperty('product_id', 1);
+        expect(response.body).toHaveProperty('user_id', 1);
+    });
+
+    it('should return 404 if feedback not found', async () => {
+        feedbackService.getFeedbackById = jest.fn().mockResolvedValue(null);
+
+        const response = await request(app).get('/api/feedback/9999');
+
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('message', 'Feedback not found');
+    });
+
+    it('should return 500 if there is a server error', async () => {
+        feedbackService.getFeedbackById = jest.fn().mockRejectedValue(new Error('Server error'));
+
+        const response = await request(app).get('/api/feedback/1');
+
+        expect(response.status).toBe(500);
+        expect(response.body).toHaveProperty('message', 'Server error');
+    });
 });
