@@ -19,7 +19,7 @@ const Product = sequelize.define(
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );
 

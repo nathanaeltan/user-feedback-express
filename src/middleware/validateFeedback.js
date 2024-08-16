@@ -5,11 +5,13 @@ const validateFeedback = async (req, res, next) => {
 
     try {
         const user = await User.findByPk(user_id);
+        console.log(user, "USERssss")
         if (!user) {
             return res.status(400).json({ error: 'Invalid user ID' });
         }
 
         const product = await Product.findByPk(product_id);
+        console.log(product, "PRODUCT")
         if (!product) {
             return res.status(400).json({ error: 'Invalid product ID' });
         }
