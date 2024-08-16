@@ -1,8 +1,9 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../db/config");
+const Feedback = require("./feedbackModel");
 
-const Product = sequelize.define(
-  "products",
+class Product extends Model {}
+Product.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -19,8 +20,11 @@ const Product = sequelize.define(
     },
   },
   {
+    sequelize,
     timestamps: false,
+    modelName: "products",
   }
 );
+
 
 module.exports = Product;

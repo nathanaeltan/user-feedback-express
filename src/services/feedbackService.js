@@ -5,7 +5,7 @@ const createFeedback = async (data) => {
     return await Feedback.create(data);
 }
 
-const getFeedbacks = async () => {
+const getAllFeedback = async () => {
     return await Feedback.findAll({
         include: Product,
     });
@@ -25,7 +25,7 @@ const deleteFeedback = async (id) => {
 };
 module.exports = {
     createFeedback,
-    getFeedbacks,
+    getAllFeedback,
     getFeedbackById,
     updateFeedback,
     deleteFeedback,

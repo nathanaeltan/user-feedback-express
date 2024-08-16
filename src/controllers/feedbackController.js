@@ -2,7 +2,6 @@ const feedbackService = require('../services/feedbackService');
 
 const createFeedback = async (req, res) => {
     try {
-        console.log(req.validatedData, "VALIDATED DATA")
         const { feedback, product_id, user_id } = req.validatedData;
         const createdFeedback = await feedbackService.createFeedback({
             feedback,
@@ -15,6 +14,17 @@ const createFeedback = async (req, res) => {
     }
 };
 
+const getAllFeedback = async (req, res) => {
+    try {
+        const feedbacks = await feedbackService.getAllFeedback();
+        res.status(200).json(feedbacks);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 module.exports = {
     createFeedback,
+    getAllFeedback,
 }
