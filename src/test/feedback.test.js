@@ -289,3 +289,63 @@ it("should return 500 if there is a server error", async () => {
   expect(response.body).toHaveProperty("message", "Server error");
 });
 });
+
+
+describe("DELETE /api/feedback/:id", () => {
+  let testFeedback, testUser;
+
+  beforeEach(() => {
+    testUser = {
+      id: 1,
+      name: "Test User",
+      email: "testuser@example.com",
+      password: "hashedpassword",
+    };
+
+    testFeedback = {
+      id: 1,
+      feedback: "Great product!",
+      product_id: 1,
+      user_id: testUser.id,
+      created_at: new Date(),
+    };
+
+    jest.spyOn(Feedback, "findByPk").mockResolvedValue(testFeedback);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should delete feedback successfully", async () => {
+    jest.spyOn(Feedback, "destroy").mockResolvedValue(1); // 1 row deleted
+
+    const response = await request(app)
+      .delete("/api/feedback/1")
+      .send();
+
+    expect(response.status).toBe(204);
+  });
+
+  it("should return 404 if feedback not found", async () => {
+    jest.spyOn(Feedback, "destroy").mockResolvedValue(0); // 0 rows deleted
+
+    const response = await request(app)
+      .delete("/api/feedback/9999")
+      .send();
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "Feedback not found");
+  });
+
+  it("should return 500 if there is a server error", async () => {
+    jest.spyOn(Feedback, "destroy").mockRejectedValue(new Error("Server error"));
+
+    const response = await request(app)
+      .delete("/api/feedback/1")
+      .send();
+
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty("message", "Server error");
+  });
+});

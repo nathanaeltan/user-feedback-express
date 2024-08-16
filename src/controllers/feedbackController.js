@@ -50,11 +50,23 @@ const updateFeedback = async (req, res) => {
     }
 };
 
-
+const deleteFeedback = async (req, res) => {
+    try {
+        const rowsDeleted = await feedbackService.deleteFeedback(req.params.id);
+        if (rowsDeleted) {
+            res.status(204).send();
+        } else {
+            res.status(404).json({ message: 'Feedback not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 module.exports = {
     createFeedback,
     getAllFeedback,
     getFeedbackById,
     updateFeedback,
+    deleteFeedback,
 }
