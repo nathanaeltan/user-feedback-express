@@ -3,9 +3,14 @@ info:
   title: User Feedback API
   version: 1.0.0
   description: API documentation for the User Feedback application
+tags:
+  - name: Feedback
+    description: Operations related to user feedback
 paths:
   /api/feedback:
     post:
+      tags:
+        - Feedback
       summary: Create a new feedback
       requestBody:
         required: true
@@ -16,10 +21,13 @@ paths:
               properties:
                 feedback:
                   type: string
+                  example: "Great product!"
                 product_id:
                   type: integer
+                  example: 1
                 user_id:
                   type: integer
+                  example: 1
       responses:
         '201':
           description: Feedback created successfully
@@ -27,9 +35,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feedback'
+              examples:
+                feedback:
+                  value:
+                    id: 1
+                    feedback: "Great product!"
+                    product_id: 1
+                    user_id: 1
         '500':
           description: Internal server error
     get:
+      tags:
+        - Feedback
       summary: Get all feedback
       responses:
         '200':
@@ -40,10 +57,40 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Feedback'
+              examples:
+                feedbackList:
+                  value:
+                    - id: 1
+                      feedback: "Great product!"
+                      product_id: 1
+                      user_id: 1
+                      product:
+                        id: 2
+                        name: "Product B"
+                        description: "Description for Product B"
+
+                    - id: 2
+                      feedback: "Good quality!"
+                      product_id: 2
+                      user_id: 2
+                      product:
+                        id: 2
+                        name: "Product B"
+                        description: "Description for Product B"
+                    - id: 3
+                      feedback: "Loved it!"
+                      product_id: 3
+                      user_id: 3
+                      product:
+                        id: 2
+                        name: "Product B"
+                        description: "Description for Product B"
         '500':
           description: Internal server error
   /api/feedback/{id}:
     get:
+      tags:
+        - Feedback
       summary: Get feedback by ID
       parameters:
         - in: path
@@ -51,6 +98,7 @@ paths:
           required: true
           schema:
             type: integer
+            example: 1
       responses:
         '200':
           description: Feedback found
@@ -58,11 +106,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feedback'
+              examples:
+                feedback:
+                  value:
+                    id: 1
+                    feedback: "Great product!"
+                    product_id: 1
+                    user_id: 1
         '404':
           description: Feedback not found
         '500':
           description: Internal server error
     put:
+      tags:
+        - Feedback
       summary: Update feedback by ID
       parameters:
         - in: path
@@ -70,6 +127,7 @@ paths:
           required: true
           schema:
             type: integer
+            example: 1
       requestBody:
         required: true
         content:
@@ -79,10 +137,13 @@ paths:
               properties:
                 feedback:
                   type: string
+                  example: "Updated feedback"
                 product_id:
                   type: integer
+                  example: 1
                 user_id:
                   type: integer
+                  example: 1
       responses:
         '200':
           description: Feedback updated successfully
@@ -90,6 +151,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feedback'
+              examples:
+                feedback:
+                  value:
+                    id: 1
+                    feedback: "Updated feedback"
+                    product_id: 1
+                    user_id: 1
         '403':
           description: Not allowed to update user
         '404':
@@ -97,6 +165,8 @@ paths:
         '500':
           description: Internal server error
     delete:
+      tags:
+        - Feedback
       summary: Delete feedback by ID
       parameters:
         - in: path
@@ -104,6 +174,7 @@ paths:
           required: true
           schema:
             type: integer
+            example: 1
       responses:
         '204':
           description: Feedback deleted successfully
@@ -118,9 +189,13 @@ components:
       properties:
         id:
           type: integer
+          example: 1
         feedback:
           type: string
+          example: "Great product!"
         product_id:
           type: integer
+          example: 1
         user_id:
           type: integer
+          example: 1

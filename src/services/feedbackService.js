@@ -12,7 +12,9 @@ const getAllFeedback = async () => {
 }
 
 const getFeedbackById = async (id) => {
-    return await Feedback.findByPk(id);
+    return await Feedback.findByPk(id, {
+        include: Product,
+    });
 };
 
 const updateFeedback = async (id, data) => {
