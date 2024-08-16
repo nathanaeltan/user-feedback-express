@@ -12,6 +12,4 @@ app.use('/api/feedback', feedbackRoutes);
 // Swagger API docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-
-
 module.exports = app;
