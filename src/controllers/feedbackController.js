@@ -36,9 +36,25 @@ const getFeedbackById = async (req, res) => {
     }
 };
 
+const updateFeedback = async (req, res) => {
+    try {
+        console.log("UPDATE")
+        if(req.feedback.user_id !== req.body.user_id) {
+            return res.status(403).json({ message: 'Not allowed to update user' });
+        }
+        const feedback = await feedbackService.updateFeedback(req.params.id, req.body);
+        return res.status(200).json(feedback);
+    } catch (error) {
+        console.log(error, "ERROR")
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+
 
 module.exports = {
     createFeedback,
     getAllFeedback,
     getFeedbackById,
+    updateFeedback,
 }

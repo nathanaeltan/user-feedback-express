@@ -202,3 +202,90 @@ describe('GET /api/feedback/:id', () => {
         expect(response.body).toHaveProperty('message', 'Server error');
     });
 });
+
+describe("PUT /api/feedback/:id", () => {
+  let testFeedback, testUser;
+
+beforeEach(() => {
+  testUser = {
+    id: 1,
+    name: "Test User",
+    email: "testuser@example.com",
+    password: "hashedpassword",
+  };
+
+  testFeedback = {
+    id: 1,
+    feedback: "Great product!",
+    product_id: 1,
+    user_id: testUser.id,
+    created_at: new Date(),
+  };
+
+  jest.spyOn(Feedback, "findByPk").mockResolvedValue(testFeedback);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+it("should update feedback successfully", async () => {
+  const updatedFeedback = {
+    ...testFeedback,
+    feedback: "Updated feedback",
+  };
+
+  jest.spyOn(Feedback, "update").mockResolvedValue([1, [updatedFeedback]]);
+  jest.spyOn(Feedback, "findByPk").mockResolvedValue(updatedFeedback);
+  const response = await request(app)
+    .put("/api/feedback/1")
+    .send({
+      feedback: "Updated feedback",
+      user_id: testUser.id,
+    });
+
+  expect(response.status).toBe(200);
+  expect(response.body).toHaveProperty("id", 1);
+  expect(response.body).toHaveProperty("feedback", "Updated feedback");
+});
+
+it("should return 403 if user ID does not match", async () => {
+  const response = await request(app)
+    .put("/api/feedback/1")
+    .send({
+      feedback: "Updated feedback",
+      user_id: 9999, // Invalid user ID
+    });
+
+  expect(response.status).toBe(403);
+  expect(response.body).toHaveProperty("message", "Not allowed to update user");
+});
+
+it("should return 404 if feedback not found", async () => {
+  jest.spyOn(Feedback, "findByPk").mockResolvedValue(null);
+
+  const response = await request(app)
+    .put("/api/feedback/9999")
+    .send({
+      feedback: "Updated feedback",
+      user_id: testUser.id,
+    });
+
+  expect(response.status).toBe(404);
+  expect(response.body).toHaveProperty("message", "Feedback not found");
+});
+
+it("should return 500 if there is a server error", async () => {
+  jest.spyOn(Feedback, "update").mockRejectedValue(new Error("Server error"));
+
+  const response = await request(app)
+    .put("/api/feedback/1")
+    .send({
+      feedback: "Updated feedback",
+      user_id: testUser.id,
+    });
+
+  expect(response.status).toBe(500);
+  expect(response.body).toHaveProperty("message", "Server error");
+});
+});

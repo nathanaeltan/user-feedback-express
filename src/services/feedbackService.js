@@ -17,7 +17,7 @@ const getFeedbackById = async (id) => {
 
 const updateFeedback = async (id, data) => {
     await Feedback.update(data, { where: { id } });
-    return getFeedbackById(id);
+    return await getFeedbackById(id);
 };
 
 const deleteFeedback = async (id) => {

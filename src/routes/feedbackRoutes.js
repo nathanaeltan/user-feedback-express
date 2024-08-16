@@ -3,11 +3,13 @@ const express = require('express');
 const feedbackController = require('../controllers/feedbackController');
 // Middleware
 const {validateFeedback} = require('../middleware/validateFeedback');
+const {validateFeedbackExists} = require('../middleware/validateFeedbackExists');
 
 const router = express.Router();
 
 router.post('/', validateFeedback, feedbackController.createFeedback);
 router.get('/', feedbackController.getAllFeedback);
 router.get('/:id', feedbackController.getFeedbackById);
+router.put('/:id', validateFeedbackExists, feedbackController.updateFeedback);
 
 module.exports = router;
